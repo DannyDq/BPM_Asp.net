@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Fiodariane.Models.Manager>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><span class="glyphicon glyphicon-briefcase"></span><span>&nbsp;Managers Dashboard</span></h2>
+
+<p class="alert-info">
+    <a href="@Url.Action("Create")">
+        <div class="glyphicon glyphicon-plus">
+            <span class="sr-only">Add Manager</span>
+            <span class="glyphicon-class">Add Manager</span>
+        </div>
+    </a>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Managers List</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <tr>
+                <th class="col-md-6">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="col-md-2"></th>
+                <th class="col-md-2"></th>
+                <th class="col-md-2"></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", new { id=item.ManagerID })" class="glyphicon-class">
+                            <div class="glyphicon glyphicon-pencil">
+                                <span class="sr-only">Edit</span>
+                                <span class="glyphicon-class">Edit</span>
+                            </div>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Details", new { id=item.ManagerID })" class="glyphicon-class">
+                            <div class="glyphicon glyphicon-list">
+                                <span class="sr-only">Details</span>
+                                <span class="glyphicon-class">Details</span>
+                            </div>
+                        </a>
+
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Delete", new { id=item.ManagerID })" class="glyphicon-class">
+                            <div class="glyphicon glyphicon-remove">
+                                <span class="sr-only">Delete</span>
+                                <span class="glyphicon-class">Delete</span>
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </table>
+        </div>
+</div>

@@ -1,0 +1,195 @@
+﻿@model Fiodariane.Models.ProcessIndex
+
+@{
+    ViewBag.Title = "Process Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2><span class="glyphicon glyphicon-tasks"></span><span>&nbsp;Process Dashboard</span></h2>
+
+<p class="alert-info">
+    <a href="@Url.Action("Create")">
+        <div class="glyphicon glyphicon-plus">
+            <span class="sr-only">Add Process</span>
+            <span class="glyphicon-class">Add Process</span>
+        </div>
+    </a>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Macro Process List</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-md-6">
+                        @Html.DisplayNameFor(model => model.Macro.SingleOrDefault().Name)
+                    </th>
+                    <th class="col-md-2">
+                        @Html.DisplayNameFor(model => model.Macro.SingleOrDefault().Manager)
+                    </th>
+                    <th class="col-md-2">
+                        @Html.DisplayNameFor(model => model.Macro.SingleOrDefault().CreationTime)
+                    </th>
+                    <th class="col-md-1"></th>
+                    <th class="col-md-1"></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Macro)
+            {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", new { id=item.ProcessID })" class="glyphicon-class">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Manager)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationTime)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id=item.ProcessID })" class="glyphicon-class">
+                                <div class="glyphicon glyphicon-pencil">
+                                    <span class="sr-only">Edit</span>
+                                    <span class="glyphicon-class">Edit</span>
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Delete", new { id=item.ProcessID })" class="glyphicon-class">
+                                <div class="glyphicon glyphicon-remove">
+                                    <span class="sr-only">Delete</span>
+                                    <span class="glyphicon-class">Delete</span>
+                                </div>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Process List</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-md-6">
+                        @Html.DisplayNameFor(model => model.Process.SingleOrDefault().Name)
+                    </th>
+                    <th class="col-md-2">
+                        @Html.DisplayNameFor(model => model.Process.SingleOrDefault().Manager)
+                    </th>
+                    <th class="col-md-2">
+                        @Html.DisplayNameFor(model => model.Macro.SingleOrDefault().CreationTime)
+                    </th>
+                    <th class="col-md-1"></th>
+                    <th class="col-md-1"></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Process)
+            {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", new { id=item.ProcessID })" class="glyphicon-class">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Manager)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationTime)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id=item.ProcessID })" class="glyphicon-class">
+                                <div class="glyphicon glyphicon-pencil">
+                                    <span class="sr-only">Edit</span>
+                                    <span class="glyphicon-class">Edit</span>
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Delete", new { id=item.ProcessID })" class="glyphicon-class">
+                                <div class="glyphicon glyphicon-remove">
+                                    <span class="sr-only">Delete</span>
+                                    <span class="glyphicon-class">Delete</span>
+                                </div>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Sub Process List</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class="col-md-6">
+                        @Html.DisplayNameFor(model => model.Subprocess.SingleOrDefault().Name)
+                    </th>
+                    <th class="col-md-2">
+                        @Html.DisplayNameFor(model => model.Subprocess.SingleOrDefault().Manager)
+                    </th>
+                    <th class="col-md-2">
+                        @Html.DisplayNameFor(model => model.Macro.SingleOrDefault().CreationTime)
+                    </th>
+                    <th class="col-md-1"></th>
+                    <th class="col-md-1"></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Subprocess)
+            {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("Details", new { id=item.ProcessID })" class="glyphicon-class">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Manager)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreationTime)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Edit", new { id=item.ProcessID })" class="glyphicon-class">
+                                <div class="glyphicon glyphicon-pencil">
+                                    <span class="sr-only">Edit</span>
+                                    <span class="glyphicon-class">Edit</span>
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Delete", new { id=item.ProcessID })" class="glyphicon-class">
+                                <div class="glyphicon glyphicon-remove">
+                                    <span class="sr-only">Delete</span>
+                                    <span class="glyphicon-class">Delete</span>
+                                </div>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

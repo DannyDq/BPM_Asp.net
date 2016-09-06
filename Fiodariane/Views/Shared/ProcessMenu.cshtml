@@ -1,0 +1,34 @@
+﻿@model Fiodariane.Models.ProcessTreeModel
+    <!-- nav nav-pills nav-stacked -->
+<div class="fst-brand">D&eacute;dalo</div>
+<div class="sub-brand">Process Mapping Platform</div>
+
+<ul id="processes" class="nav nav-stacked nav-tabs list-group">
+    <li class="list-group-item-heading">Macro-Process</li>
+    @foreach (var process in Model.Macro)
+    {
+        <li class="list-inline">
+            @Html.ActionLink(process.Name,
+                "Details", "ProcessModels",
+                new { id = process.ProcessID }, new { @class = "glyphicon-class" })
+        </li>
+    }
+    <li class="list-group-item-heading">Process</li>
+    @foreach (var process in Model.Process)
+    {
+        <li class="list-inline">
+            @Html.ActionLink(process.Name,
+                "Details", "ProcessModels",
+                new { id = process.ProcessID }, new { @class = "glyphicon-class" })
+        </li>
+    }
+    <li class="list-group-item-heading">SubProcess</li>
+    @foreach (var process in Model.SubProcess)
+    {
+        <li class="list-inline">
+            @Html.ActionLink(process.Name,
+                "Details", "ProcessModels",
+                new { id = process.ProcessID }, new { @class = "glyphicon-class" })
+        </li>
+    }
+</ul>

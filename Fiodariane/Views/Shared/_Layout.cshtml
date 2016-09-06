@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Fio d'Ariane</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top" style="left: 16.666%">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-left nav-tabs">
+                    <li>
+                        <a href="@Url.Action("Index", "ProcessModels")">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                            <span class="sr-only">Processes</span>
+                            <span class="glyphicon-class">Processes</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Procedures")">
+                            <span class="glyphicon glyphicon-paperclip"></span>
+                            <span class="sr-only">Procedures</span>
+                            <span class="glyphicon-class">Procedures</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Managers")">
+                            <span class="glyphicon glyphicon-briefcase"></span>
+                            <span class="sr-only">Managers</span>
+                            <span class="glyphicon-class">Managers</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "HRSkills")">
+                            <span class="glyphicon glyphicon glyphicon-check"></span>
+                            <span class="sr-only">HR Skills</span>
+                            <span class="glyphicon-class">HR Skills</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "SupportingIS")">
+                            <span class="glyphicon glyphicon glyphicon-tags"></span>
+                            <span class="sr-only">Supporting IS</span>
+                            <span class="glyphicon-class">Supporting IS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Entities", new { type=1 })">
+                            <span class="glyphicon glyphicon glyphicon-th-list"></span>
+                            <span class="sr-only">Organisation Unit</span>
+                            <span class="glyphicon-class">Organisation Unit</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "Entities", new { type=2 })">
+                            <span class="glyphicon glyphicon glyphicon-list-alt"></span>
+                            <span class="sr-only">HR Function</span>
+                            <span class="glyphicon-class">HR Function</span>
+                        </a>
+                    </li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+    <div id="wrapper">
+        <div id="sidemenu-wrapper">
+            @{Html.RenderAction("ProcessMenu", "ProcessModels");}
+        </div>
+        <div id="page-content-wrapper">
+            <div>
+                @RenderBody()
+            </div>
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Fio d'Ariane</p>
+            </footer>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

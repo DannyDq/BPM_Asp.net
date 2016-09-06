@@ -1,0 +1,398 @@
+﻿@model Fiodariane.Models.ProcessModels
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Process Details</h2>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">@Html.DisplayFor(model => model.Name)</h3>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Parent)
+            </dt>
+
+            <dd>
+                @if (Model.ParentID == null)
+            {
+                    <div>Macro-Process</div>
+                }
+                else
+                {
+                    <a href="@Url.Action("Details", "ProcessModels", new { id = Model.ParentID })">@Model.Parent.Name</a>
+                }
+            </dd>
+
+            @if (Model.ParentID.HasValue)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.ProcedureID)
+                </dt>
+
+                <dd>
+                    @if (Model.ProcedureID == null)
+                    {
+                        <div>Empty</div>
+                    }
+                    else
+                    {
+                        <a href="@Model.Procedure.Link">@Model.Procedure.Name</a>
+                    }
+                </dd>
+            }
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ManagerID)
+            </dt>
+
+            <dd>
+                @if (Model.ManagerID == null)
+            {
+                    <div>Empty</div>
+                }
+                else
+                {
+                    @Html.DisplayFor(model => model.Manager.Name)
+                }
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreationTime)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CreationTime)
+            </dd>
+        </dl>
+        @if (ViewBag.Children.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Child Processes</h3>
+                </div>
+                <div class="panel-body">
+                    @foreach (var item in ViewBag.Children)
+                    {
+                        <a href="@Url.Action("Details", "ProcessModels", new { id = item.ProcessID })">@item.Name</a>
+                    }
+                </div>
+            </div>
+        }
+        @if (Model.ParentID.HasValue)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Tasks</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="task_panel">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().Name, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var name = (item.Name.Description == null || item.Name.Description.Equals("")) ? "Empty" : item.Name.Description;
+
+                                @Html.Raw("<div class=\"mycol\">");
+                                if (item.Name.Url != null)
+                                {
+                                    @Html.Raw("<a href=\"" + item.Name.Url + "\">" + item.Name.Description + "</a>");
+                                }
+                                else if (item.Name.Embedded != null)
+                                {
+                                    @Html.Raw("<a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-placement=\"bottom\" data-trigger=\"focus\" title=\"Description\" data-content=\"" + item.Name.Embedded + "\">" + item.Name.Description + "</a>");
+                                }
+                                else
+                                {
+                                    @Html.Raw("<div>" + name + "</div>");
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().SupportingISID, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var supportingis = (item.SupportingIS == null || item.SupportingIS.Name == null || item.SupportingIS.Name.Equals("")) ? "Empty" : item.SupportingIS.Name;
+                                @Html.Raw("<div class=\"mycol\">");
+                                @Html.Raw("<div>" + supportingis + "</div>");
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().HRFunctionID, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var hrfunction = (item.HRFunction == null || item.HRFunction.Name == null || item.HRFunction.Name.Equals("")) ? "Empty" : item.HRFunction.Name;
+                                @Html.Raw("<div class=\"mycol\">");
+                                @Html.Raw("<div>" + hrfunction + "</div>");
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().OrganisationUnitID, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var organisationunit = (item.OrganisationUnit == null || item.OrganisationUnit.Name == null || item.OrganisationUnit.Name.Equals("")) ? "Empty" : item.OrganisationUnit.Name;
+                                @Html.Raw("<div class=\"mycol\">");
+                                @Html.Raw("<div>" + organisationunit + "</div>");
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().HRSkillsID, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var hrskills = (item.HRSkills == null || item.HRSkills.Name == null || item.HRSkills.Name.Equals("")) ? "Empty" : item.HRSkills.Name;
+                                @Html.Raw("<div class=\"mycol\">");
+                                @Html.Raw("<div>" + hrskills + "</div>");
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().Input, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                @Html.Raw("<div class=\"mycol\">");
+                                    if (item.Input.Count() == 0)
+                                    {
+                                        @Html.Raw("<div>No items.</div>");
+                                    }
+                                    else
+                                    {
+                                        foreach (var subitem in item.Input)
+                                        {
+                                            var input = (subitem.Description == null || subitem.Description.Equals("")) ? "Empty" : subitem.Description;
+                                            if (subitem.Url == null || subitem.Url.Equals(""))
+                                            {
+                                                @Html.Raw("<div>" + input + "</div>");
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<a href=\"" + subitem.Url + "\">" + input + "</a>");
+                                            }
+                                        }
+                                    }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().Origin, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                @Html.Raw("<div class=\"mycol\">");
+                                    if (item.Origin.Count() == 0)
+                                    {
+                                        @Html.Raw("<div>No items.</div>");
+                                    }
+                                    else
+                                    {
+                                        foreach (var subitem in item.Origin)
+                                        {
+                                            var origin = (subitem.Name == null || subitem.Name.Equals("")) ? "Empty" : subitem.Name;
+                                            @Html.Raw("<div>" + origin + "</div>");
+                                    }
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().Output, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                @Html.Raw("<div class=\"mycol\">");
+                                    if (item.Output.Count() == 0)
+                                    {
+                                        @Html.Raw("<div>No items.</div>");
+                                    }
+                                    else
+                                    {
+                                        foreach (var subitem in item.Output)
+                                        {
+                                            var output = (subitem.Description == null || subitem.Description.Equals("")) ? "Empty" : subitem.Description;
+                                            if (subitem.Url == null || subitem.Url.Equals(""))
+                                            {
+                                                @Html.Raw("<div>" + output + "</div>");
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<a href=\"" + subitem.Url + "\">" + output + "</a>");
+                                        }
+                                    }
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().Destination, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                @Html.Raw("<div class=\"mycol\">");
+                                    if (item.Destination.Count() == 0)
+                                    {
+                                        @Html.Raw("<div>No items.</div>");
+                                    }
+                                    else
+                                    {
+                                        foreach (var subitem in item.Destination)
+                                        {
+                                            var destination = (subitem.Name == null || subitem.Name.Equals("")) ? "Empty" : subitem.Name;
+                                            @Html.Raw("<div>" + destination + "</div>");
+                                    }
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().DocRef, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                @Html.Raw("<div class=\"mycol\">");
+                                    if (item.DocRef.Count() == 0)
+                                    {
+                                        @Html.Raw("<div>No items.</div>");
+                                    }
+                                    else
+                                    {
+                                        foreach (var subitem in item.DocRef)
+                                        {
+                                            var docref = (subitem.Description == null || subitem.Description.Equals("")) ? "Empty" : subitem.Description;
+                                            if (subitem.Url == null || subitem.Url.Equals(""))
+                                            {
+                                                @Html.Raw("<div>" + docref + "</div>");
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<a href=\"" + subitem.Url + "\">" + docref + "</a>");
+                                        }
+                                    }
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().ArchiveID, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var archive = (item.Archive.Description == null || item.Archive.Description.Equals("")) ? "Empty" : item.Archive.Description;
+
+                                @Html.Raw("<div class='mycol'>");
+                                if (item.Archive.Url != null)
+                                {
+                                    @Html.Raw("<a href=\"" + item.Archive.Url + "\">" + item.Archive.Description + "</a>");
+                                }
+                                else if (item.Archive.Embedded != null)
+                                {
+                                    @Html.Raw("<a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-trigger=\"focus\" title=\"Description\" data-content=\"" + item.Archive.Embedded + "\">" + item.Archive.Description + "</a>");
+                                }
+                                else
+                                {
+                                    @Html.Raw("<div>" + archive + "</div>");
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Tasks.SingleOrDefault().KPIID, htmlAttributes: new { @class = "control-label mycol" })
+                            @foreach (var item in Model.Tasks)
+                            {
+                                var kpi = (item.KPI.Description == null || item.KPI.Description.Equals("")) ? "Empty" : item.KPI.Description;
+
+                                @Html.Raw("<div class='mycol'>");
+                                if (item.KPI.Url != null)
+                                {
+                                    @Html.Raw("<a href=\"" + item.KPI.Url + "\">" + item.KPI.Description + "</a>");
+                                }
+                                else if (item.KPI.Embedded != null)
+                                {
+                                    @Html.Raw("<a tabindex=\"0\" role=\"button\" data-toggle=\"popover\" data-trigger=\"focus\" title=\"Description\" data-content=\"" + item.KPI.Embedded + "\">" + item.KPI.Description + "</a>");
+                                }
+                                else
+                                {
+                                    @Html.Raw("<div>" + kpi + "</div>");
+                                }
+                                @Html.Raw("</div>");
+                            }
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FluxDiagram, htmlAttributes: new { @class = "control-label mycol" })
+                            <div id="diagram">
+                                <img alt="Flux Diagram" src="@(Model.FluxDiagram)" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProcessID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section Scripts {
+    <style type="text/css">
+        .form-group {
+            padding-top: 0px;
+            padding-bottom: 0px;
+            overflow-x: hidden;
+        }
+
+        .form-group > div > a {
+            margin:0;
+            padding:0;
+            border:0;
+            display: block;
+        }
+
+        .form-group > div > div {
+            margin:0;
+            padding:0;
+            border:0;
+            overflow-x:hidden;
+        }
+
+        .form-group > div > p {
+            overflow-x:hidden;
+        }
+
+        #diagram {
+            display: inline;
+        }
+    </style>
+    <script type="text/javascript" src="~/Scripts/process_task_editor.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover();
+
+            /*
+             * Update Flux Diagram
+            */
+            $('#diagram > img').width(function() {
+                var lab = $('.control-label');
+                var col = $('.mycol');
+                var line =$('.form-group');
+                var col_width = (col.width() + col.css('padding-left').replace('px', '') * 2) * @Model.Tasks.Count();
+                var lab_width = (lab.width() + lab.css('padding-left').replace('px', '') * 2);
+                var line_width = line.width() + line.css('padding-left').replace('px','') * 2;
+                if((col_width + lab_width) > line_width) {
+                    line.css('width', (col_width + lab_width + 20) + 'px');
+                }
+                $('#diagram').css('width',col_width);
+                return col_width;
+            }());
+
+        });
+
+    </script>
+
+}

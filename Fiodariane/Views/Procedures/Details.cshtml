@@ -1,0 +1,50 @@
+﻿@model Fiodariane.Models.Procedure
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Procedure Details</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Procedure</h3>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt class="line-height">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd class="line-height">
+                <div class="col-md-4">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+                <div class="col-md-2">
+                    <a href="@Url.Action("Edit", new { id=Model.ProcedureID })" class="glyphicon-class">
+                        <div class="glyphicon glyphicon-pencil">
+                            <span class="sr-only">Edit</span>
+                            <span class="glyphicon-class">Edit</span>
+                        </div>
+                    </a>
+                </div>
+            </dd>
+            <dt class="line-height">
+                @Html.DisplayNameFor(model => model.Link)
+            </dt>
+            <dd class="line-height">
+                <div class="col-md-6">
+                    <a href="@Html.DisplayFor(model => model.Link)" class="glyphicon-class">
+                        @Html.DisplayFor(model => model.Link)
+                    </a>
+                </div>
+            </dd>
+
+        </dl>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

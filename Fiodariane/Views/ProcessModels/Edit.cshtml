@@ -1,0 +1,567 @@
+﻿@model Fiodariane.Models.ProcessModels
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ProcessID, htmlAttributes: new { id = "processID" })
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Published on @string.Format("{0:dd MMMM yyyy}", Model.CreationTime)</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", id = "nameEditor" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger", id = "nameValidation" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Parent, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.ParentID, ViewBag.Parent as SelectList, "No Parent", new { @class = "form-control", id = "parentEditor" })
+                        @Html.ValidationMessageFor(x => x.ParentID, "", new { @class = "text-danger", id = "parentValidation" })
+                    </div>
+                </div>
+                @if (Model.ParentID.HasValue)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Procedure, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.ProcedureID, ViewBag.Procedure as SelectList, "No Procedure", new { @class = "form-control", id = "procedureEditor" })
+                            @Html.ValidationMessageFor(x => x.ProcedureID, "", new { @class = "text-danger", id = "procedureValidation" })
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Manager, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.ManagerID, ViewBag.Manager as SelectList, "No Manager", new { @class = "form-control", id = "managerEditor" })
+                        @Html.ValidationMessageFor(x => x.ManagerID, "", new { @class = "text-danger", id = "managerValidation" })
+                    </div>
+                </div>
+
+                @if (Model.ParentID.HasValue)
+                {
+                    <div id="task_panel" class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Tasks</h3>
+                        </div>
+                        <div class="panel-body task_panel" id="tasks">
+                            <div class="form-group">
+                                <div class="control-label mycol">&nbsp;</div>
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol btn btn-link cloneme delete" data-pk="@( item.TaskID )">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                        <span class="sr-only">Delete</span>
+                                        <span class="glyphicon-class">Delete</span>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.SingleOrDefault().Name, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_embedded">
+                                        <a href="#" id="@( "task_name" + item.TaskID )" class="task_link" data-type="link_embedded" data-pk="@item.TaskID" data-url="@Url.Action("Update","Tasks")" data-title="Enter Task" data-placement="bottom">@item.Name.Description</a>
+                                        @Html.ValidationMessageFor(model => item.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                }
+                                <div class="mycol btn btn-link" id="btnAdd">
+                                    <span class="glyphicon glyphicon-plus-sign"></span>
+                                    <span class="sr-only">Add</span>
+                                    <span class="glyphicon-class">Add</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().SupportingISID, htmlAttributes: new { @class = "control-label mycol" })
+                                @{ var i = 0;}
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_drop">
+                                        @Html.DropDownListFor(model => item.SupportingISID, ViewBag.SupportingIS[i] as SelectList, "No Supporting IS", new { @class = "form-control supportingis", @data_pk = item.TaskID })
+                                        @Html.ValidationMessageFor(model => item.SupportingISID, "", new { @class = "text-danger" })
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().HRFunctionID, htmlAttributes: new { @class = "control-label mycol" })
+                                @{ i = 0;}
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_drop">
+                                        @Html.DropDownListFor(model => item.HRFunctionID, ViewBag.HRFunction[i] as SelectList, "No HR Function", new { @class = "form-control hrfunction", @data_pk = item.TaskID })
+                                        @Html.ValidationMessageFor(model => item.HRFunctionID, "", new { @class = "text-danger" })
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().OrganisationUnitID, htmlAttributes: new { @class = "control-label mycol" })
+                                @{ i = 0;}
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_drop">
+                                        @Html.DropDownListFor(model => item.OrganisationUnitID, ViewBag.OrganisationUnit[i] as SelectList, "No Organisation Unit", new { @class = "form-control organisationunit", @data_pk = item.TaskID })
+                                        @Html.ValidationMessageFor(model => item.OrganisationUnitID, "", new { @class = "text-danger" })
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().HRSkillsID, htmlAttributes: new { @class = "control-label mycol" })
+                                @{ i = 0;}
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_drop">
+                                        @Html.DropDownListFor(model => item.HRSkillsID, ViewBag.HRSkills[i] as SelectList, "No Skill", new { @class = "form-control hrskills", @data_pk = item.TaskID })
+                                        @Html.ValidationMessageFor(model => item.HRSkillsID, "", new { @class = "text-danger" })
+                                    </div>
+                                    i++;
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().Input, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_link">
+                                        <div id="@( "task_input_add" + item.TaskID )" class="mycol btn btn-link task_add" data-type="Input">
+                                            <span class="glyphicon glyphicon-plus-sign"></span>
+                                            <span class="sr-only">Add</span>
+                                            <span class="glyphicon-class">Add</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().Origin, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_check">
+                                        <a href="#" id="@( "task_origin" + item.TaskID )" data-type="checklist" data-pk="@( item.TaskID )" data-url="@Url.Action("UpdateCheck", "Tasks")" data-title="Select options" class="task_options"></a>
+                                        @Html.ValidationMessageFor(model => item.Origin, "", new { @class = "text-danger" })
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().Output, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_link">
+                                        <div id="@( "task_output_add" + item.TaskID )" class="mycol btn btn-link task_add" data-type="Output">
+                                            <span class="glyphicon glyphicon-plus-sign"></span>
+                                            <span class="sr-only">Add</span>
+                                            <span class="glyphicon-class">Add</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().Destination, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_check">
+                                        <a href="#" id="@( "task_destination" + item.TaskID )" data-type="checklist" data-pk="@( item.TaskID )" data-url="@Url.Action("UpdateCheck", "Tasks")" data-title="Select options" class="task_options"></a>
+                                        @Html.ValidationMessageFor(model => item.Destination, "", new { @class = "text-danger" })
+                                    </div>
+                                }
+
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.FirstOrDefault().DocRef, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_link">
+                                        <div id="@( "task_docref_add" + item.TaskID )" class="mycol btn btn-link task_add" data-type="DocRef">
+                                            <span class="glyphicon glyphicon-plus-sign"></span>
+                                            <span class="sr-only">Add</span>
+                                            <span class="glyphicon-class">Add</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.SingleOrDefault().ArchiveID, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_embedded">
+                                        <a href="#" id="@( "task_archive" + item.TaskID )" class="task_link" data-type="link_embedded" data-pk="@item.TaskID" data-url="@Url.Action("Update","Tasks")" data-title="Enter Archive">@item.Archive.Description</a>
+                                        @Html.ValidationMessageFor(model => item.Archive, "", new { @class = "text-danger" })
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Tasks.SingleOrDefault().KPIID, htmlAttributes: new { @class = "control-label mycol" })
+                                @foreach (var item in Model.Tasks)
+                                {
+                                    <div class="mycol cloneme node_embedded">
+                                        <a href="#" id="@( "task_kpi" + item.TaskID )" class="task_link" data-type="link_embedded" data-pk="@item.TaskID" data-url="@Url.Action("Update","Tasks")" data-title="Enter KPI">@item.KPI.Description</a>
+                                        @Html.ValidationMessageFor(model => item.KPI, "", new { @class = "text-danger" })
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FluxDiagram, htmlAttributes: new { @class = "control-label mycol" })
+                                <div class="box mycol">
+                                    <div id="uploadbox" onClick="singleupload_input.click();" class="form-control singleupload">
+                                        @if (Model.FluxDiagram != null && !Model.FluxDiagram.Equals(string.Empty))
+                                        {
+                                            <img src="@Model.FluxDiagram" />
+                                        }
+                                    </div>
+                                    @Html.EditorFor(model => model.FluxDiagram, new { htmlAttributes = new { @class = "form-control", id = "singleupload_input", type = "file", style = "display:none;" } })
+                                    @Html.ValidationMessageFor(model => model.FluxDiagram, "", new { @class = "text-danger", id = "upload_validation" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                                    }
+
+            </div>
+        </div>
+    </div>
+                                }
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    <link href="~/Content/upload.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/bootstrap-editable.css" rel="stylesheet">
+    <link href="~/Content/bootstrap-editable-custom.css" rel="stylesheet">
+
+    <script type="text/javascript" src="~/Scripts/bootstrap-editable.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-editable-custom.js"></script>
+    <script type="text/javascript" src="~/Scripts/process_task_editor.js"></script>
+
+    <script type="text/javascript">
+        //turn to inline mode
+        $.fn.editable.defaults.mode = 'popup';
+
+        $(document).ready(function () {
+
+            /*
+             * Initialise procedure
+             */
+
+            $('#nameEditor').focusout(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("Update","ProcessModels")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'Name', task: 0
+                    });
+            });
+            $('#parentEditor').change(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("Update","ProcessModels")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'Parent', task: 0
+                    });
+            });
+
+            @if(Model.ParentID.HasValue) {
+                @Html.Raw("            $('#procedureEditor').change(function() { " +
+                "$(this).updateProcessValue(" +
+                    "{ " +
+                        "url: '" + Url.Action("Update","ProcessModels") + "', processID: $('#processID').val(), " +
+                        "editor: $(this).val(), validation: $(this).siblings('span'), operation: 'Procedure', task: 0 " +
+                    "}); " +
+                "});");
+            }
+            $('#managerEditor').change(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("Update","ProcessModels")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'Manager', task: 0
+                    });
+            });
+            $('.supportingis').change(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("UpdateDrop","Tasks")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'SupportingIS', task: $(this).attr('data-pk')
+                    });
+            });
+            $('.hrfunction').change(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("UpdateDrop","Tasks")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'HRFunction', task: $(this).attr('data-pk')
+                    });
+            });
+            $('.organisationunit').change(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("UpdateDrop","Tasks")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'OrganisationUnit', task: $(this).attr('data-pk')
+                    });
+            });
+            $('.hrskills').change(function () {
+                $(this).updateProcessValue(
+                    {
+                        url: '@Url.Action("UpdateDrop","Tasks")', processID: $('#processID').val(),
+                        editor: $(this).val(), validation: $(this).siblings('span'), operation: 'Skills', task: $(this).attr('data-pk')
+                    });
+            });
+
+            @{ var idx = 0; }
+
+            /*
+             * Initialise embedded links
+             */
+
+            @foreach (var item in Model.Tasks) {
+                /*
+                 * Name
+                 */
+                @Html.Raw("$('#task_name" + item.TaskID + "').initialiseEmbeddedLinks({ " +
+               "url: '" + @Url.Action("Update", "Tasks") + "', " +
+               "name: 'Name', " +
+               "item_name: '" + item.Name.Description + "', " +
+               "item_url: '" + item.Name.Url + "', " +
+               "item_embedded: '" + item.Name.Embedded + "', " +
+               "process_id: " + Model.ProcessID + ", " +
+               "task_id: " + item.TaskID + ", " +
+               "sysurl_id: " + item.NameID + ", " +
+               "operation: 'Name' " +
+               "}); ");
+
+                /*
+                 * Archive
+                 */
+                @Html.Raw("$('#task_archive" + item.TaskID + "').initialiseEmbeddedLinks({ " +
+               "url: '" + @Url.Action("Update", "Tasks") + "', " +
+               "name: 'Archive', " +
+               "item_name: '" + item.Archive.Description + "', " +
+               "item_url: '" + item.Archive.Url + "', " +
+               "item_embedded: '" + item.Archive.Embedded + "', " +
+               "process_id: " + Model.ProcessID + ", " +
+               "task_id: " + item.TaskID + ", " +
+               "sysurl_id: " + (item.ArchiveID == null ? 0 : item.ArchiveID.Value) + ", " +
+               "operation: 'Archive' " +
+               "}); ");
+
+                /*
+                 * KPI
+                 */
+                @Html.Raw("$('#task_kpi" + item.TaskID + "').initialiseEmbeddedLinks({ " +
+               "url: '" + @Url.Action("Update", "Tasks") + "', " +
+               "name: 'KPI', " +
+               "item_name: '" + item.KPI.Description + "', " +
+               "item_url: '" + item.KPI.Url + "', " +
+               "item_embedded: '" + item.KPI.Embedded + "', " +
+               "process_id: " + Model.ProcessID + ", " +
+               "task_id: " + item.TaskID + ", " +
+               "sysurl_id: " + (item.KPIID == null ? 0 : item.KPIID.Value) + ", " +
+               "operation: 'Kpi' " +
+               "}); ");
+
+                /*
+                 * Task Origin
+                 */
+               @Html.Raw("$('#task_origin" + item.TaskID + "').initialiseSelectLinks({ " +
+               "process_id: " + Model.ProcessID + ", " +
+               "task_id: " + item.TaskID + ", " +
+               "operation: 'Origin', " +
+               "value: " + Json.Encode(ViewBag.OriginSelJSON[idx]) + ", " +
+               "source: " + Json.Encode(Json.Encode(ViewBag.OriginJSON[idx])) +
+               "}); ");
+
+                /*
+                 * Task Destination
+                 */
+               @Html.Raw("$('#task_destination" + item.TaskID + "').initialiseSelectLinks({ " +
+               "process_id: " + Model.ProcessID + ", " +
+               "task_id: " + item.TaskID + ", " +
+               "operation: 'Destination', " +
+               "value: " + Json.Encode(ViewBag.DestinationSelJSON[idx]) + ", " +
+               "source: " + Json.Encode(Json.Encode(ViewBag.DestinationJSON[idx])) +
+               "}); ");
+
+                /*
+                 * Increase the index
+                 */
+                idx++;
+            }
+
+            @foreach (var item in Model.Tasks) {
+                /*
+                * Task input / add links
+                */
+                @Html.Raw("$('#task_input_add" + item.TaskID + "').click(function() { $(this).addEmbeddedLink({" +
+                "url: '" + @Url.Action("Update", "Tasks") + "', " +
+                "delete_url: '" + @Url.Action("ManageSysUrl", "Tasks") + "', " +
+                "process_id: " + Model.ProcessID + ", " +
+                "task_id: " + item.TaskID + ", " +
+                "sysurl_type: 'Input', " +
+                "data_name: 'Input', " +
+                "validation: $(this).siblings('span') " +
+                "}); });");
+
+                /*
+                * Task output / add links
+                */
+                @Html.Raw("$('#task_output_add" + item.TaskID + "').click(function() { $(this).addEmbeddedLink({" +
+                "url: '" + @Url.Action("Update", "Tasks") + "', " +
+                "delete_url: '" + @Url.Action("ManageSysUrl", "Tasks") + "', " +
+                "process_id: " + Model.ProcessID + ", " +
+                "task_id: " + item.TaskID + ", " +
+                "sysurl_type: 'Output', " +
+                "data_name: 'Output', " +
+                "validation: $(this).siblings('span') " +
+                "}); });");
+
+                /*
+                * Task docref / add links
+                */
+                @Html.Raw("$('#task_docref_add" + item.TaskID + "').click(function() { $(this).addEmbeddedLink({" +
+                "url: '" + @Url.Action("Update", "Tasks") + "', " +
+                "delete_url: '" + @Url.Action("ManageSysUrl", "Tasks") + "', " +
+                "process_id: " + Model.ProcessID + ", " +
+                "task_id: " + item.TaskID + ", " +
+                "sysurl_type: 'DocRef', " +
+                "data_name: 'DocRef', " +
+                "validation: $(this).siblings('span') " +
+                "}); });");
+
+                if(item.Input != null)
+                {
+                    foreach (var subitem in item.Input)
+                    {
+                        /*
+                         * Task input
+                         */
+                        @Html.Raw("$('#task_input_add" + item.TaskID + "').createEmbeddedLink({" +
+                       "url: '" + @Url.Action("Update", "Tasks") + "', " +
+                       "delete_url: '" + @Url.Action("ManageSysUrl", "Tasks") + "', " +
+                       "process_id: " + Model.ProcessID + ", " +
+                       "task_id: " + item.TaskID + ", " +
+                       "operation: 'Input', " +
+                       "data_type: 'link', " +
+                       "data_pk: " + subitem.SysUrlID + ", " +
+                       "data_name: 'Input', " +
+                       "data_content_name: '" + subitem.Description + "', " +
+                       "data_content_url: '" + subitem.Url + "', " +
+                       "data_content_embedded: '" + subitem.Embedded + "', " +
+                       "});");
+                        }
+                }
+                if (item.Output != null)
+                {
+                    foreach (var subitem in item.Output)
+                    {
+                        /*
+                         * Task output
+                         */
+                    @Html.Raw("$('#task_output_add" + item.TaskID + "').createEmbeddedLink({" +
+                            "url: '" + @Url.Action("Update", "Tasks") + "', " +
+                            "delete_url: '" + @Url.Action("ManageSysUrl", "Tasks") + "', " +
+                            "process_id: " + Model.ProcessID + ", " +
+                            "task_id: " + item.TaskID + ", " +
+                            "operation: 'Output', " +
+                            "data_type: 'link', " +
+                            "data_pk: " + subitem.SysUrlID + ", " +
+                            "data_name: 'Output', " +
+                            "data_content_name: '" + subitem.Description + "', " +
+                            "data_content_url: '" + subitem.Url + "', " +
+                            "data_content_embedded: '" + subitem.Embedded + "', " +
+                            "});");
+                    }
+                }
+                if(item.DocRef != null)
+                {
+                    foreach(var subitem in item.DocRef)
+                    {
+                        /*
+                         * Task docref
+                         */
+                        @Html.Raw("$('#task_docref_add" + item.TaskID + "').createEmbeddedLink({" +
+                       "url: '" + @Url.Action("Update", "Tasks") + "', " +
+                       "delete_url: '" + @Url.Action("ManageSysUrl", "Tasks") + "', " +
+                       "process_id: " + Model.ProcessID + ", " +
+                       "task_id: " + item.TaskID + ", " +
+                       "operation: 'DocRef', " +
+                       "data_type: 'link', " +
+                       "data_pk: " + subitem.SysUrlID + ", " +
+                       "data_name: 'DocRef', " +
+                       "data_content_name: '" + subitem.Description + "', " +
+                       "data_content_url: '" + subitem.Url + "', " +
+                       "data_content_embedded: '" + subitem.Embedded + "', " +
+                       "});");
+                    }
+                }
+            }
+
+            /*
+             * Update Flux Diagram
+             */
+            $('#uploadbox > img').updateBoxSize();
+
+            /*
+             * Initialise the Flux Diagram upload
+             */
+            $('#uploadbox').singleupload({
+                action: '@Url.Action("UploadFile", "ProcessModels")',
+                inputId: 'singleupload_input',
+                name: 'FluxDiagram',
+                width: $(this).calculatesBoxSize,
+                onError: function (code) {
+                    $('#upload_validation').text('Error: ' + code);
+                },
+                onSuccess: function (url, data) {
+                    $('#upload_validation').text('Success: ' + data);
+                },
+                /*,onProgress: function(loaded, total) {} */
+                'processID': $('#processID').val()
+            });
+
+            $('.delete').click(function () {
+                $(this).deleteTask({
+                    url: '@Url.Action("ManageTasks", "Tasks")',
+                    task_id: $(this).attr('data-pk'), process_id: $('#processID').val()
+                });
+            });
+
+            @if(Model.ParentID.HasValue)
+            {
+                @Html.Raw("$('#btnAdd').click(function () { "+
+                    "$(this).addTask({ " +
+                        "url: '" + Url.Action("ManageTasks", "Tasks") + "', url_embedded: '" + Url.Action("Update", "Tasks") + "', " +
+                        "url_delete: '" + Url.Action("ManageSysUrl", "Tasks") + "', task_id: 0, process_id: $('#processID').val(), " +
+                        "select_options: " + Html.Raw(Json.Encode(Json.Encode(ViewBag.OriginJSON[0]))) +
+                     "});" +
+                "});");
+                @Html.Raw("$('.task_panel > .form-group').updateLineWidth({ column: $('.mycol'), label: $('.control-label'), num_cols: " + Model.Tasks.Count + "});");
+            }
+        });
+    </script>
+}

@@ -1,0 +1,13 @@
+.singleupload {
+	background: url(images/empty_bg.png);
+    border:1px solid #ccc;
+	text-align: center;
+	width: 92px;
+	height: 92px;
+	line-height: 92px;
+	cursor: pointer;
+}
+
+.popover {
+    max-width: 400px;
+}

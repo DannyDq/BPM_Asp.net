@@ -1,0 +1,40 @@
+﻿@model Fiodariane.Models.Manager
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Manager Details</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Manager</h3>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt class="line-height">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd class="line-height">
+                <div class="col-md-6">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+                <div class="col-md-2">
+                    <a href="@Url.Action("Edit", new { id=Model.ManagerID })" class="glyphicon-class">
+                        <div class="glyphicon glyphicon-pencil">
+                            <span class="sr-only">Edit</span>
+                            <span class="glyphicon-class">Edit</span>
+                        </div>
+                    </a>
+                </div>
+            </dd>
+
+        </dl>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
